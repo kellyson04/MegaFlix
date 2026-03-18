@@ -1,0 +1,7 @@
+CREATE TABLE movie (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    movie VARCHAR(100) NOT NULL,
+    genre VARCHAR(25) NOT NULL,
+    duration DOUBLE NOT NULL,
+    PRIMARY KEY (id)
+);
