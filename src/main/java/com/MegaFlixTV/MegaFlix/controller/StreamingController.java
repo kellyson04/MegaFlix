@@ -18,24 +18,30 @@ public class StreamingController {
         this.streamingService = streamingService;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<StreamingResponse>> allStreamings () {
-        return ResponseEntity.ok(streamingService.streamings());
+    @PostMapping()
+    public ResponseEntity<StreamingResponse> adicionarStreaming (@RequestBody StreamingRequest streamingRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(streamingService.salvarStreaming(streamingRequest));
     }
 
-    @PostMapping()
-    public ResponseEntity<StreamingResponse> saveStreaming (@RequestBody StreamingRequest streamingRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(streamingService.saveStreaming(streamingRequest));
+    @GetMapping()
+    public ResponseEntity<List<StreamingResponse>> listarStreamings () {
+        return ResponseEntity.ok(streamingService.listarStreamings());
     }
+
 
     @GetMapping("/{id}")
-    public ResponseEntity<StreamingResponse> oneStreaming (@PathVariable Long id) {
-        return ResponseEntity.ok(streamingService.streaming(id));
+    public ResponseEntity<StreamingResponse> listarStreamingPorId (@PathVariable Long id) {
+        return ResponseEntity.ok(streamingService.listaStreamingPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<StreamingResponse> alterarStreamingPorCompleto (@PathVariable Long id, @RequestBody StreamingRequest streamingRequest) {
+        return ResponseEntity.ok(streamingService.alterarStreamingPorCompleto(id,streamingRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStreaming (@PathVariable Long id) {
-        streamingService.deleteStreaming(id);
+        streamingService.deletarStreaming(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
