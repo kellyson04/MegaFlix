@@ -1,4 +1,12 @@
 package com.MegaFlixTV.MegaFlix.controller.response;
 
-public record UserResponse() {
+import lombok.Builder;
+
+@Builder
+public record UserResponse(
+        Long id,
+        String user,
+        String password,
+        String email
+) {
 }
