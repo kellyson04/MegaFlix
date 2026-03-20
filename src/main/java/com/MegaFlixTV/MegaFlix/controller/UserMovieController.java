@@ -53,8 +53,6 @@ public class UserMovieController {
     @PostMapping("/watch/user/{userId}/movie/{movieId}/relation/{relationId}")
     public ResponseEntity<UserMovieResponse> assistirFilme (@PathVariable Long userId,@PathVariable Long movieId,@PathVariable Long relationId) {
 
-        userMovieService.assistirFilme(userId,movieId,relationId);
-
         return ResponseEntity.ok(userMovieService.assistirFilme(userId,movieId,relationId));
     }
 }
