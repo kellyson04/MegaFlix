@@ -44,7 +44,7 @@ public class UserService {
 
         acharUsuario.setUser(userRequest.user());
         acharUsuario.setPassword(userRequest.password());
-        acharUsuario.setEmail(userRequest.user());
+        acharUsuario.setEmail(userRequest.email());
 
         userRepository.save(acharUsuario);
 
