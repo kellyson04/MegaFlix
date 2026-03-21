@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -28,5 +31,14 @@ public class Movie {
     @Column(name = "duration", length = 5, nullable = false)
     private double duration;
 
+    @Column(name = "release_year")
+    private Integer releaseYear;
+
+    @Column(name = "created_at",updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "rating")
+    private Double rating;
 }
 
