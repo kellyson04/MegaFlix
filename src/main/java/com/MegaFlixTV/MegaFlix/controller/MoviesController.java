@@ -44,6 +44,7 @@ public class MoviesController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletarFilme (@PathVariable Long id) {
+        movieService.deletarFilme(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
