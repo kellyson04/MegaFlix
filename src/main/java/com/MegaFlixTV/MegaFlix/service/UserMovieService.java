@@ -1,5 +1,6 @@
 package com.MegaFlixTV.MegaFlix.service;
 
+import com.MegaFlixTV.MegaFlix.controller.request.UserMovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserMovieResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.User;
@@ -11,6 +12,7 @@ import com.MegaFlixTV.MegaFlix.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserMovieService {
@@ -61,17 +63,6 @@ public class UserMovieService {
         userMovieRepository.deleteById(id);
     }
 
-    public void adicionarFavorito (Long userId,Long movieId,Long relationId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Este usuario não existe"));
-
-        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Este filme não existe"));
-
-        UserMovie userMovie = userMovieRepository.findById(relationId).orElseThrow(() -> new RuntimeException("Filme ou usuario não possuem relação para favoritar."));
-
-        userMovie.setFavorite(true);
-
-        userMovieRepository.save(userMovie);
-    }
 
     public UserMovieResponse assistirFilme (Long userId,Long movieId,Long relationId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Este usuario não existe"));
@@ -85,6 +76,15 @@ public class UserMovieService {
         userMovieRepository.save(userMovie);
 
         return UserMovieMapper.mapToResponse(userMovie);
+    }
+
+    public void adicionarFavorito (Long relacaoId) {
+
+        UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RuntimeException("Relação não existente."));
+
+        relacao.setFavorite(true);
+
+        userMovieRepository.save(relacao);
     }
 }
 
