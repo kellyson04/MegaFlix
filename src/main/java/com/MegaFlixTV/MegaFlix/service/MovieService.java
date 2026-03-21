@@ -26,10 +26,10 @@ public class MovieService {
                 .toList();
     }
 
-    public MovieRequest adicionarFilme (MovieRequest movieRequest) {
-         movieRepository.save(MovieMapper.toEntity(movieRequest));
+    public MovieResponse adicionarFilme (MovieRequest movieRequest) {
+        Movie movie = movieRepository.save(MovieMapper.toEntity(movieRequest));
 
-        return movieRequest;
+        return MovieMapper.toResponse(movie);
     }
 
     public MovieResponse listarFilmeEspecifico (Long id) {
@@ -38,7 +38,7 @@ public class MovieService {
         return MovieMapper.toResponse(procurarFilme);
     }
 
-    public MovieResponse AlterarFilmePorCompleto (Long id, MovieRequest movieRequest) {
+    public MovieResponse alterarFilmePorCompleto (Long id, MovieRequest movieRequest) {
         Movie procurarFilme = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("ID não encontrado"));
 
 
