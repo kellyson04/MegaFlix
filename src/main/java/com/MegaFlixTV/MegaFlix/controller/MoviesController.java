@@ -50,13 +50,24 @@ public class MoviesController {
     }
 
     @GetMapping("/filtrar/por-genero")
-    public ResponseEntity <List<MovieResponse>> listarFilmesPorGenero (@RequestParam String genero) {
+    public ResponseEntity <List<MovieResponse>> ListarPorGenero (@RequestParam String genero) {
 
         return ResponseEntity.ok(movieService.listarFilmesPorGenero(genero));
     }
 
-    @GetMapping("/filtrar/por-duracao")
-    public ResponseEntity<List<MovieResponse>> listarFilmesPorDuracao (@RequestParam double duracao) {
-        return ResponseEntity.ok(movieService.listarFilmesPelaDuracao(duracao));
+    @GetMapping("/filtrar/por-duracao-maior")
+    public ResponseEntity<List<MovieResponse>> listarPorDuracaoMaiorOuIgual (@RequestParam double duracaoMaior) {
+        return ResponseEntity.ok(movieService.listarFilmesPelaDuracaoMaior(duracaoMaior));
+    }
+
+    @GetMapping("/filtrar/por-duracao-menor")
+    public ResponseEntity<List<MovieResponse>> listarPorDuracaoMenorOuIgual (@RequestParam double duracaoMenor) {
+        return ResponseEntity.ok(movieService.listarFilmesPelaDuracaoMenor(duracaoMenor));
+    }
+
+    @GetMapping("/filtrar/por-titulo")
+    public ResponseEntity<List<MovieResponse>> listarPorTitulo (@RequestParam String titulo) {
+
+        return ResponseEntity.ok(movieService.listarFilmesPeloTitulo(titulo));
     }
 }
