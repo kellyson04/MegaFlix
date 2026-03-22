@@ -2,6 +2,7 @@ package com.MegaFlixTV.MegaFlix.controller;
 
 import com.MegaFlixTV.MegaFlix.controller.request.MovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
+import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,16 @@ public class MoviesController {
     public ResponseEntity<Void> deletarFilme (@PathVariable Long id) {
         movieService.deletarFilme(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/filtrar/por-genero")
+    public ResponseEntity <List<MovieResponse>> listarFilmesPorGenero (@RequestParam String genero) {
+
+        return ResponseEntity.ok(movieService.listarFilmesPorGenero(genero));
+    }
+
+    @GetMapping("/filtrar/por-duracao")
+    public ResponseEntity<List<MovieResponse>> listarFilmesPorDuracao (@RequestParam double duracao) {
+        return ResponseEntity.ok(movieService.listarFilmesPelaDuracao(duracao));
     }
 }
