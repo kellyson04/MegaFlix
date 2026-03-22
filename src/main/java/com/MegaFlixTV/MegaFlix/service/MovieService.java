@@ -7,8 +7,11 @@ import com.MegaFlixTV.MegaFlix.mapper.MovieMapper;
 import com.MegaFlixTV.MegaFlix.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -53,5 +56,25 @@ public class MovieService {
 
     public void deletarFilme (Long id) {
         movieRepository.deleteById(id);
+    }
+
+    public List<MovieResponse> listarFilmesPorGenero (String genre) {
+
+
+        List<MovieResponse> listarFilmesPeloGenero = movieRepository.findMovieByGenre(genre).stream()
+                .map(movie -> MovieMapper.toResponse(movie))
+                .toList();
+
+        return listarFilmesPeloGenero;
+    }
+
+    public List<MovieResponse> listarFilmesPelaDuracao (double duration) {
+
+        List<MovieResponse> listarFilmesDuracao = movieRepository.findMovieByDuration(duration)
+                .stream()
+                .map(movie -> MovieMapper.toResponse(movie))
+                .toList();
+
+        return listarFilmesDuracao;
     }
 }
