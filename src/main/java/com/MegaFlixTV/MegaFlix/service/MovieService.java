@@ -68,13 +68,33 @@ public class MovieService {
         return listarFilmesPeloGenero;
     }
 
-    public List<MovieResponse> listarFilmesPelaDuracao (double duration) {
+    public List<MovieResponse> listarFilmesPelaDuracaoMaior (double duration) {
 
-        List<MovieResponse> listarFilmesDuracao = movieRepository.findMovieByDuration(duration)
+        List<MovieResponse> listarFilmesDuracaoMaior = movieRepository.findMovieByDurationGreaterThanEqual(duration)
                 .stream()
                 .map(movie -> MovieMapper.toResponse(movie))
                 .toList();
 
-        return listarFilmesDuracao;
+        return listarFilmesDuracaoMaior;
+    }
+
+    public List<MovieResponse> listarFilmesPelaDuracaoMenor (double duration) {
+
+        List<MovieResponse> listarFilmesDuracaoMenor = movieRepository.findMovieByDurationLessThanEqual(duration)
+                .stream()
+                .map(movie -> MovieMapper.toResponse(movie))
+                .toList();
+
+        return listarFilmesDuracaoMenor;
+    }
+
+    public List<MovieResponse> listarFilmesPeloTitulo (String title) {
+
+        List<MovieResponse> listarPeloTitulo = movieRepository.findMovieByMovieContainingIgnoreCase(title)
+                .stream()
+                .map(movie -> MovieMapper.toResponse(movie))
+                .toList();
+
+        return listarPeloTitulo;
     }
 }
