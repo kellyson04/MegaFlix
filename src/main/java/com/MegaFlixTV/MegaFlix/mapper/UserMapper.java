@@ -13,8 +13,6 @@ public class UserMapper {
         return UserResponse.builder()
                 .id(user.getId())
                 .user(user.getUser())
-                .password(user.getPassword())
-                .email(user.getEmail())
                 .build();
     }
 
