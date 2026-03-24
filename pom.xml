@@ -12,7 +12,7 @@
 	<artifactId>MegaFlix</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MegaFlix</name>
-	<description>vai se fuder ok</description>
+	<description>Projeto Spring Boot com API para simular um site de Filmes</description>
 	<url/>
 	<licenses>
 		<license/>
