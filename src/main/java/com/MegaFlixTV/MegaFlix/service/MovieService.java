@@ -3,6 +3,7 @@ package com.MegaFlixTV.MegaFlix.service;
 import com.MegaFlixTV.MegaFlix.controller.request.MovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
+import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.MovieMapper;
 import com.MegaFlixTV.MegaFlix.repository.MovieRepository;
 import org.springframework.stereotype.Service;
@@ -36,13 +37,13 @@ public class MovieService {
     }
 
     public MovieResponse listarFilmeEspecifico (Long id) {
-        Movie procurarFilme = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("ID não encontrado"));
+        Movie procurarFilme = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado"));
 
         return MovieMapper.toResponse(procurarFilme);
     }
 
     public MovieResponse alterarFilmePorCompleto (Long id, MovieRequest movieRequest) {
-        Movie procurarFilme = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("ID não encontrado"));
+        Movie procurarFilme = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado"));
 
 
         procurarFilme.setMovie(movieRequest.movie());
@@ -55,6 +56,8 @@ public class MovieService {
     }
 
     public void deletarFilme (Long id) {
+        Movie filmePraDeletar = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Impossivel Deletar um filme inexistente"));
+
         movieRepository.deleteById(id);
     }
 
@@ -89,12 +92,17 @@ public class MovieService {
     }
 
     public List<MovieResponse> listarFilmesPeloTitulo (String title) {
+        List<Movie> acharFilme = movieRepository.findMovieByMovieContainingIgnoreCase(title);
 
-        List<MovieResponse> listarPeloTitulo = movieRepository.findMovieByMovieContainingIgnoreCase(title)
-                .stream()
-                .map(movie -> MovieMapper.toResponse(movie))
-                .toList();
+        if (acharFilme.isEmpty()) {
+            throw new MovieNotFoundException("Não possuimos este filme no catalogo!");
+        }else {
+            List<MovieResponse> listarPeloTitulo = movieRepository.findMovieByMovieContainingIgnoreCase(title)
+                    .stream()
+                    .map(movie -> MovieMapper.toResponse(movie))
+                    .toList();
 
-        return listarPeloTitulo;
+            return listarPeloTitulo;
+        }
     }
 }

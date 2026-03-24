@@ -4,6 +4,7 @@ import com.MegaFlixTV.MegaFlix.controller.request.MovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class MoviesController {
     }
 
     @PostMapping()
-    public ResponseEntity<MovieResponse> adicionarFilme (@RequestBody MovieRequest movieRequest) {
+    public ResponseEntity<MovieResponse> adicionarFilme (@RequestBody @Valid MovieRequest movieRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(movieService.adicionarFilme(movieRequest));
     }
 
@@ -38,7 +39,7 @@ public class MoviesController {
 
 
     @PutMapping("{id}")
-    public ResponseEntity<MovieResponse> AlterarFilmePorCompleto (@PathVariable Long id, @RequestBody MovieRequest movieRequest) {
+    public ResponseEntity<MovieResponse> AlterarFilmePorCompleto (@PathVariable Long id, @RequestBody @Valid MovieRequest movieRequest) {
          return ResponseEntity.ok(movieService.alterarFilmePorCompleto(id,movieRequest));
     }
 

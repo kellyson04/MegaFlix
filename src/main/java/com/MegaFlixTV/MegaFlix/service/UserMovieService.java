@@ -5,6 +5,9 @@ import com.MegaFlixTV.MegaFlix.controller.response.UserMovieResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.User;
 import com.MegaFlixTV.MegaFlix.entity.UserMovie;
+import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
+import com.MegaFlixTV.MegaFlix.exception.RelationNotFoundException;
+import com.MegaFlixTV.MegaFlix.exception.UserNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.UserMovieMapper;
 import com.MegaFlixTV.MegaFlix.repository.MovieRepository;
 import com.MegaFlixTV.MegaFlix.repository.UserMovieRepository;
@@ -28,8 +31,8 @@ public class UserMovieService {
     }
 
     public UserMovieResponse adicionarFilmeAoUsuario (Long user,Long movie) {
-        User verificarUsuario = userRepository.findById(user).orElseThrow(() -> new RuntimeException("Este Usuario não existe."));
-        Movie verificarFilme = movieRepository.findById(movie).orElseThrow(() -> new RuntimeException("Este Filme não existe."));
+        User verificarUsuario = userRepository.findById(user).orElseThrow(() -> new UserNotFoundException("Este Usuario não existe."));
+        Movie verificarFilme = movieRepository.findById(movie).orElseThrow(() -> new MovieNotFoundException("Este Filme não existe."));
 
         UserMovie vincularUsuarioFilme = new UserMovie();
 
@@ -52,24 +55,24 @@ public class UserMovieService {
     }
 
     public UserMovieResponse listarRelacaoEspecifica (Long id) {
-        UserMovie userMovie = userMovieRepository.findById(id).orElseThrow(() -> new RuntimeException("Esta relação não existe."));
+        UserMovie userMovie = userMovieRepository.findById(id).orElseThrow(() -> new RelationNotFoundException("Esta relação não existe."));
 
         return UserMovieMapper.mapToResponse(userMovie);
     }
 
     public void deletarRelacao (Long id) {
-        UserMovie userMovie = userMovieRepository.findById(id).orElseThrow(() -> new RuntimeException("Esta relação não existe."));
+        UserMovie userMovie = userMovieRepository.findById(id).orElseThrow(() -> new RelationNotFoundException("Esta relação não existe."));
 
         userMovieRepository.deleteById(id);
     }
 
 
     public UserMovieResponse assistirFilme (Long userId,Long movieId,Long relationId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Este usuario não existe"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RelationNotFoundException("Este usuario não existe"));
 
-        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Este filme não existe"));
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Este filme não existe"));
 
-        UserMovie userMovie = userMovieRepository.findById(relationId).orElseThrow(() -> new RuntimeException("Usuario não possui o filme na playlist"));
+        UserMovie userMovie = userMovieRepository.findById(relationId).orElseThrow(() -> new RelationNotFoundException("Usuario não possui o filme na playlist"));
 
         userMovie.setWatched(true);
 
@@ -80,7 +83,7 @@ public class UserMovieService {
 
     public void adicionarFavorito (Long relacaoId) {
 
-        UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RuntimeException("Relação não existente."));
+        UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("Relação não existente."));
 
         relacao.setFavorite(true);
 

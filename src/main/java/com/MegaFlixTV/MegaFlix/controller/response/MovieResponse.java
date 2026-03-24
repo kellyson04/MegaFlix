@@ -7,6 +7,6 @@ public record MovieResponse(
         Long id,
         String movie,
         String genre,
-        double duration
+        Double duration
 ) {
 }
