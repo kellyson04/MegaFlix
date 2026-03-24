@@ -4,6 +4,7 @@ package com.MegaFlixTV.MegaFlix.controller;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<UserResponse> criarUsuario (@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> criarUsuario (@RequestBody @Valid UserRequest userRequest) {
          return ResponseEntity.status(HttpStatus.CREATED).body(userService.criarUsuario(userRequest));
     }
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> alterarUsuarioPorCompleto (@PathVariable Long id, @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> alterarUsuarioPorCompleto (@PathVariable Long id, @RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.ok(userService.alterarUsuarioCompleto(id, userRequest));
     }
 
