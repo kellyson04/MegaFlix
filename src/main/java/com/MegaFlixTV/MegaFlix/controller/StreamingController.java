@@ -3,6 +3,7 @@ package com.MegaFlixTV.MegaFlix.controller;
 import com.MegaFlixTV.MegaFlix.controller.request.StreamingRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
 import com.MegaFlixTV.MegaFlix.service.StreamingService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class StreamingController {
     }
 
     @PostMapping()
-    public ResponseEntity<StreamingResponse> adicionarStreaming (@RequestBody StreamingRequest streamingRequest) {
+    public ResponseEntity<StreamingResponse> adicionarStreaming (@RequestBody @Valid StreamingRequest streamingRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(streamingService.salvarStreaming(streamingRequest));
     }
 
@@ -35,7 +36,7 @@ public class StreamingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StreamingResponse> alterarStreamingPorCompleto (@PathVariable Long id, @RequestBody StreamingRequest streamingRequest) {
+    public ResponseEntity<StreamingResponse> alterarStreamingPorCompleto (@PathVariable Long id, @RequestBody @Valid StreamingRequest streamingRequest) {
         return ResponseEntity.ok(streamingService.alterarStreamingPorCompleto(id,streamingRequest));
     }
 
