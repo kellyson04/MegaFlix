@@ -24,4 +24,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> userNotFoundExceptionHandler (UserNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ExceptionHandler(RelationNotFoundException.class)
+    public ResponseEntity<String> relationNotFoundExceptionHandler (RelationNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }
