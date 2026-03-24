@@ -29,7 +29,7 @@ public class Movie {
     private String genre;
 
     @Column(name = "duration", length = 5, nullable = false)
-    private double duration;
+    private Double duration;
 
     @Column(name = "release_year")
     private Integer releaseYear;
