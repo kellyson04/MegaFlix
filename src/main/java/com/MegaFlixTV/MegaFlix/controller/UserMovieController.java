@@ -51,7 +51,7 @@ public class UserMovieController {
     }
 
     @PostMapping("/favorite/{relacaoId}")
-    public ResponseEntity<Void> adicionarFavorito (@PathVariable Long relacaoId) {
+    public ResponseEntity<Void> favoritarFilme (@PathVariable Long relacaoId) {
         userMovieService.adicionarFavorito(relacaoId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
