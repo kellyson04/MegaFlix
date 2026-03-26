@@ -6,7 +6,8 @@ import lombok.Builder;
 
 @Builder
 public record UserMovieResponse(
-        User user,
+        Long userid,
+        String username,
         Movie movie,
         boolean favorite,
         boolean watched
