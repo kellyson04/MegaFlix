@@ -22,7 +22,7 @@ public class UserMovieMapper {
     public static UserMovieResponse mapToResponse (UserMovie userMovie) {
 
         return UserMovieResponse.builder()
-                .userid(userMovie.getId())
+                .relationId(userMovie.getId())
                 .username(userMovie.getUser().getUser())
                 .movieid(userMovie.getMovie().getId())
                 .movieTitle(userMovie.getMovie().getMovie())
