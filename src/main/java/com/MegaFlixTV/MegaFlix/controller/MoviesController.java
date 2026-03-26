@@ -2,7 +2,7 @@ package com.MegaFlixTV.MegaFlix.controller;
 
 import com.MegaFlixTV.MegaFlix.controller.request.MovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
-import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
+import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
 import com.MegaFlixTV.MegaFlix.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -71,4 +71,15 @@ public class MoviesController {
 
         return ResponseEntity.ok(movieService.listarFilmesPeloTitulo(titulo));
     }
+
+    @PostMapping("/streaming/{movieId}/{streamingId}")
+    public ResponseEntity<MovieResponse> adicionarVinculoComStreaming (@PathVariable Long movieId,@PathVariable Long streamingId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(movieService.adicionarFilmeNoStreaming(movieId,streamingId));
+    }
+
+    @GetMapping("/{movieId}/streamings")
+    public ResponseEntity<List<StreamingResponse>> StreamingsQuePossuemOFilme (@PathVariable Long movieId) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(movieService.StreamingsQueOFilmeSeEncontra(movieId));
+    }
+
 }
