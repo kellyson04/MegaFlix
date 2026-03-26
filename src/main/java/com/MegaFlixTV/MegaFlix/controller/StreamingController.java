@@ -1,6 +1,7 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
 import com.MegaFlixTV.MegaFlix.controller.request.StreamingRequest;
+import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
 import com.MegaFlixTV.MegaFlix.service.StreamingService;
 import jakarta.validation.Valid;
@@ -44,6 +45,17 @@ public class StreamingController {
     public ResponseEntity<Void> deleteStreaming (@PathVariable Long id) {
         streamingService.deletarStreaming(id);
 
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/filmes/{id}")
+    public ResponseEntity<List<MovieResponse>> listarFilmesDisponiveisNoStreaming (@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(streamingService.filmesNoStreaming(id));
+    }
+
+    @DeleteMapping("/{streamingId}/movie/{movieId}")
+    public ResponseEntity<Void> removerFilmeDoStreaming (@PathVariable Long streamingId,@PathVariable Long movieId) {
+        streamingService.removerFilmeDoStreaming(streamingId,movieId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
