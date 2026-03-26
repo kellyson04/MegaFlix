@@ -68,18 +68,21 @@ public class UserMovieService {
     }
 
 
-    public UserMovieResponse assistirFilme (Long userId,Long movieId,Long relationId) {
+    public UserMovieResponse assistirFilme (Long userId,Long movieId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RelationNotFoundException("Este usuario não existe"));
 
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Este filme não existe"));
 
-        UserMovie userMovie = userMovieRepository.findById(relationId).orElseThrow(() -> new RelationNotFoundException("Usuario não possui o filme na playlist"));
+        UserMovie userMovie = userMovieRepository.findByUserAndMovie(user,movie).orElseThrow(() -> new RelationNotFoundException("Usuario não possui o filme na playlist"));
 
-
+        if (!userMovie.isWatched()) {
             userMovie.setWatched(true);
-
             userMovieRepository.save(userMovie);
             return UserMovieMapper.mapToResponse(userMovie);
+        }else {
+            throw new RuntimeException("O filme ja foi assistido!");
+        }
+
 
     }
 
@@ -119,6 +122,16 @@ public class UserMovieService {
                         .toList();
 
         return filmesFavoritados;
+    }
+
+    public List<UserMovieResponse> filmesFavoritadosDoUsuario (Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado!"));
+
+        List<UserMovie> userMovie = userMovieRepository.findByUserAndFavoriteTrue(user);
+
+        return userMovie.stream()
+                .map(filme -> UserMovieMapper.mapToResponse(filme))
+                .toList();
     }
 }
 
