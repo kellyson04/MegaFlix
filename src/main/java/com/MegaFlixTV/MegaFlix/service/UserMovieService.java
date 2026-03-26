@@ -93,8 +93,18 @@ public class UserMovieService {
         }else {
             throw new RuntimeException("Filme ja favoritado");
         }
+    }
+
+    public void removerFavorito (Long relacaoId) {
+        UserMovie userMovie = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("O usuario não possui esse Filme na Playlist!"));
 
 
+        if (userMovie.isFavorite()) {
+            userMovie.setFavorite(false);
+            userMovieRepository.save(userMovie);
+        }else {
+            throw new RuntimeException("O filme não esta favoritado!");
+        }
     }
 }
 
