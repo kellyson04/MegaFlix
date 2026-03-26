@@ -29,4 +29,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> relationNotFoundExceptionHandler (RelationNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ExceptionHandler(StreamingNotFoundException.class)
+    public ResponseEntity<String> streamingNotFoundExceptionHandler (StreamingNotFoundException s) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(s.getMessage());
+    }
 }
