@@ -87,8 +87,6 @@ public class UserMovieService {
 
         UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("Relação não existente."));
 
-        relacao.setFavorite(true);
-
         if (!relacao.isFavorite()) {
             relacao.setFavorite(true);
             userMovieRepository.save(relacao);
