@@ -34,6 +34,7 @@ public class UserMovieService {
         User verificarUsuario = userRepository.findById(user).orElseThrow(() -> new UserNotFoundException("Este Usuario não existe."));
         Movie verificarFilme = movieRepository.findById(movie).orElseThrow(() -> new MovieNotFoundException("Este Filme não existe."));
 
+        //REVISAR ISSO AQ SE PA TA RETORNANDO EMAIL E SENHA NA RELACAO POR CAUSA DO SET ALI EMBAIXO Q N TEM MATPTOESPONSE
         UserMovie vincularUsuarioFilme = new UserMovie();
 
         vincularUsuarioFilme.setUser(verificarUsuario);
@@ -74,11 +75,12 @@ public class UserMovieService {
 
         UserMovie userMovie = userMovieRepository.findById(relationId).orElseThrow(() -> new RelationNotFoundException("Usuario não possui o filme na playlist"));
 
-        userMovie.setWatched(true);
 
-        userMovieRepository.save(userMovie);
+            userMovie.setWatched(true);
 
-        return UserMovieMapper.mapToResponse(userMovie);
+            userMovieRepository.save(userMovie);
+            return UserMovieMapper.mapToResponse(userMovie);
+
     }
 
     public void adicionarFavorito (Long relacaoId) {
@@ -87,7 +89,14 @@ public class UserMovieService {
 
         relacao.setFavorite(true);
 
-        userMovieRepository.save(relacao);
+        if (!relacao.isFavorite()) {
+            relacao.setFavorite(true);
+            userMovieRepository.save(relacao);
+        }else {
+            throw new RuntimeException("Filme ja favoritado");
+        }
+
+
     }
 }
 
