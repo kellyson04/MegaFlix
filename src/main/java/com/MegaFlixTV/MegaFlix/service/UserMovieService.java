@@ -106,5 +106,19 @@ public class UserMovieService {
             throw new RuntimeException("O filme não esta favoritado!");
         }
     }
+
+    public List<UserMovieResponse> listarFilmesFavoritados () {
+        List<UserMovie> filmesFavoritadosEntity = userMovieRepository.findAll()
+                .stream()
+                .filter(filme -> filme.isFavorite())
+                .toList();
+
+        List<UserMovieResponse> filmesFavoritados =
+                filmesFavoritadosEntity.stream()
+                        .map(filme -> UserMovieMapper.mapToResponse(filme))
+                        .toList();
+
+        return filmesFavoritados;
+    }
 }
 
