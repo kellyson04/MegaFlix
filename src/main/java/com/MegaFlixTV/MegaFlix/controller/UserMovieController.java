@@ -57,7 +57,14 @@ public class UserMovieController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PostMapping("/unfavorite/{relationId}")
+    public ResponseEntity<Void> desfavoritarFilme (@PathVariable Long relationId) {
+        userMovieService.removerFavorito(relationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
-
-
+    @GetMapping("/favorites")
+    public ResponseEntity<List<UserMovieResponse>> filmesFavoritados () {
+        return ResponseEntity.status(HttpStatus.FOUND).body(userMovieService.listarFilmesFavoritados());
+    }
 }
