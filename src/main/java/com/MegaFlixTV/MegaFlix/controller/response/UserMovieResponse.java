@@ -6,9 +6,14 @@ import lombok.Builder;
 
 @Builder
 public record UserMovieResponse(
-        Long userid,
+        Long relationId,
         String username,
-        Movie movie,
+        Long movieid,
+        String movieTitle,
+        String movieGenre,
+        Double movieDuration,
+        Integer movieReleaseYear,
+        Double movieRating,
         boolean favorite,
         boolean watched
 ) {
