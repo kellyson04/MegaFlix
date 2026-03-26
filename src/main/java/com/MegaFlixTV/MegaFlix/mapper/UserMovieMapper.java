@@ -22,7 +22,8 @@ public class UserMovieMapper {
     public static UserMovieResponse mapToResponse (UserMovie userMovie) {
 
         return UserMovieResponse.builder()
-                .user(userMovie.getUser())
+                .userid(userMovie.getId())
+                .username(userMovie.getUser().getUser())
                 .movie(userMovie.getMovie())
                 .favorite(userMovie.isFavorite())
                 .watched(userMovie.isWatched())
