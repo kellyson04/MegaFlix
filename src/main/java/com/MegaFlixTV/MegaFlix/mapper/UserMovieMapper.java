@@ -24,7 +24,12 @@ public class UserMovieMapper {
         return UserMovieResponse.builder()
                 .userid(userMovie.getId())
                 .username(userMovie.getUser().getUser())
-                .movie(userMovie.getMovie())
+                .movieid(userMovie.getMovie().getId())
+                .movieTitle(userMovie.getMovie().getMovie())
+                .movieGenre(userMovie.getMovie().getGenre())
+                .movieDuration(userMovie.getMovie().getDuration())
+                .movieReleaseYear(userMovie.getMovie().getReleaseYear())
+                .movieRating(userMovie.getMovie().getRating())
                 .favorite(userMovie.isFavorite())
                 .watched(userMovie.isWatched())
                 .build();
