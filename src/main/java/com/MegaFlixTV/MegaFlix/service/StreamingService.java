@@ -46,13 +46,13 @@ public class StreamingService {
 
 
     public StreamingResponse listaStreamingPorId (Long id) {
-       Streaming streaming = streamingRepository.findById(id).orElseThrow(() -> new RuntimeException("Não existe streaming com este ID."));
+       Streaming streaming = streamingRepository.findById(id).orElseThrow(() -> new StreamingNotFoundException("Não existe streaming com este ID."));
 
        return StreamingMapper.toResponse(streaming);
     }
 
     public StreamingResponse alterarStreamingPorCompleto (Long id, StreamingRequest streamingRequest) {
-        Streaming acharStreaming = streamingRepository.findById(id).orElseThrow(() -> new RuntimeException("Esse Streaming não existe."));
+        Streaming acharStreaming = streamingRepository.findById(id).orElseThrow(() -> new StreamingNotFoundException("Esse Streaming não existe."));
 
         acharStreaming.setName(streamingRequest.name());
 
@@ -62,7 +62,7 @@ public class StreamingService {
     }
 
     public void deletarStreaming (Long id) {
-        streamingRepository.findById(id).orElseThrow(() -> new RuntimeException("Este streaming não existe."));
+        streamingRepository.findById(id).orElseThrow(() -> new StreamingNotFoundException("Este streaming não existe."));
 
         streamingRepository.deleteById(id);
     }
