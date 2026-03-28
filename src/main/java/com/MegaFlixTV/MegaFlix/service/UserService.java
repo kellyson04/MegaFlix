@@ -5,6 +5,7 @@ import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.entity.User;
+import com.MegaFlixTV.MegaFlix.exception.InvalidCredentialsException;
 import com.MegaFlixTV.MegaFlix.exception.UserNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.UserMapper;
 import com.MegaFlixTV.MegaFlix.repository.UserRepository;
@@ -61,10 +62,10 @@ public class UserService {
     }
 
     public UserLoginResponse logarUsuario (UserLoginRequest userLoginRequest) {
-        User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new UserNotFoundException("Usuario não existe"));
+        User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados invalidos"));
 
         if (!userLoginRequest.password().equals(user.getPassword())) {
-            throw new UserNotFoundException("Usuario não existee");
+            throw new InvalidCredentialsException("Dados invalidos");
         }
 
         return new UserLoginResponse(userLoginRequest.user());
