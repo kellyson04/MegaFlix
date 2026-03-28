@@ -3,6 +3,7 @@ package com.MegaFlixTV.MegaFlix.controller;
 
 import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
+import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.service.UserService;
 import jakarta.validation.Valid;
@@ -48,9 +49,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponse> login (@RequestBody UserLoginRequest userLoginRequest) {
-
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponse> login (@RequestBody @Valid UserLoginRequest userLoginRequest) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest));
     }
 
 }
