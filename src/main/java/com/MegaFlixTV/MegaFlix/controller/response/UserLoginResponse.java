@@ -1,4 +1,6 @@
 package com.MegaFlixTV.MegaFlix.controller.response;
 
-public record UserLoginResponse() {
+public record UserLoginResponse(
+        String user
+) {
 }
