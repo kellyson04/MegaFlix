@@ -1,9 +1,10 @@
 package com.MegaFlixTV.MegaFlix.service;
 
+import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
+import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.entity.User;
-import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.UserNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.UserMapper;
 import com.MegaFlixTV.MegaFlix.repository.UserRepository;
@@ -58,4 +59,16 @@ public class UserService {
 
         userRepository.deleteById(id);
     }
+
+    public UserLoginResponse logarUsuario (UserLoginRequest userLoginRequest) {
+        User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new UserNotFoundException("Usuario não existe"));
+
+        if (!userLoginRequest.password().equals(user.getPassword())) {
+            throw new UserNotFoundException("Usuario não existee");
+        }
+
+        return new UserLoginResponse(userLoginRequest.user());
+    }
+
+
 }
