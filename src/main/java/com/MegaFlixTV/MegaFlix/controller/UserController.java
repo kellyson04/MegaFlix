@@ -1,6 +1,7 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
 
+import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.service.UserService;
@@ -45,6 +46,11 @@ public class UserController {
     public ResponseEntity<Void> deletarUsuario (@PathVariable Long id) {
         userService.deletarUsuario(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponse> login (@RequestBody UserLoginRequest userLoginRequest) {
+
     }
 
 }
