@@ -1,10 +1,12 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
+import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserMovieResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.User;
 import com.MegaFlixTV.MegaFlix.entity.UserMovie;
 import com.MegaFlixTV.MegaFlix.service.UserMovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +53,8 @@ public class UserMovieController {
     }
 
     @PostMapping("/favorite/{relationId}")
-    public ResponseEntity<Void> favoritarFilme (@PathVariable Long relationId) {
-        userMovieService.adicionarFavorito(relationId);
+    public ResponseEntity<Void> favoritarFilme (@RequestBody @Valid UserLoginRequest userLoginRequest, @PathVariable Long relationId) {
+        userMovieService.adicionarFavorito(userLoginRequest,relationId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -68,7 +70,7 @@ public class UserMovieController {
         return ResponseEntity.status(HttpStatus.FOUND).body(userMovieService.listarFilmesFavoritados());
     }
 
-    @GetMapping("user/{userId}/favorites")
+    @GetMapping("/user/{userId}/favorites")
     public ResponseEntity<List<UserMovieResponse>> filmesFavoritadosDoUsuario (@PathVariable Long userId) {
         return ResponseEntity.ok(userMovieService.filmesFavoritadosDoUsuario(userId));
     }
