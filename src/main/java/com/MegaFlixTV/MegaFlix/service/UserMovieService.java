@@ -1,13 +1,16 @@
 package com.MegaFlixTV.MegaFlix.service;
 
+import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserMovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserMovieResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.User;
 import com.MegaFlixTV.MegaFlix.entity.UserMovie;
+import com.MegaFlixTV.MegaFlix.exception.InvalidCredentialsException;
 import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.RelationNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.UserNotFoundException;
+import com.MegaFlixTV.MegaFlix.mapper.UserMapper;
 import com.MegaFlixTV.MegaFlix.mapper.UserMovieMapper;
 import com.MegaFlixTV.MegaFlix.repository.MovieRepository;
 import com.MegaFlixTV.MegaFlix.repository.UserMovieRepository;
@@ -86,21 +89,39 @@ public class UserMovieService {
 
     }
 
-    public void adicionarFavorito (Long relacaoId) {
+    public void adicionarFavorito (UserLoginRequest userLoginRequest,Long relacaoId) {
 
+        User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados de Login Invalidos."));
         UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("Relação não existente."));
+
+        if (!userLoginRequest.password().equals(user.getPassword())) {
+            throw new InvalidCredentialsException("Dados de Login Invalidos.");
+        }
+
+        if (!userLoginRequest.user().equals(relacao.getUser().getUser())) {
+            throw new RelationNotFoundException("Voce está tentando favoritar um filme que não é da sua Playlist.");
+        }
 
         if (!relacao.isFavorite()) {
             relacao.setFavorite(true);
             userMovieRepository.save(relacao);
         }else {
-            throw new RuntimeException("Filme ja favoritado");
+            throw new RuntimeException("Filme ja esta favoritado");
         }
     }
 
-    public void removerFavorito (Long relacaoId) {
+    public void removerFavorito (UserLoginRequest userLoginRequest,Long relacaoId) {
+        User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados de Login Invalidos."));
+
+        if (!userLoginRequest.password().equals(user.getPassword())) {
+            throw new InvalidCredentialsException("Dados de Login Invalidos.");
+        }
+
         UserMovie userMovie = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("O usuario não possui esse Filme na Playlist!"));
 
+        if (!userLoginRequest.user().equals(userMovie.getUser().getUser())) {
+            throw new RelationNotFoundException("Voce está tentando desfavoritar um filme que não é da sua Playlist.");
+        }
 
         if (userMovie.isFavorite()) {
             userMovie.setFavorite(false);
