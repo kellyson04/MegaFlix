@@ -6,6 +6,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -43,6 +45,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST,"/megaflix/playlist/unfavorite/{relationId}").authenticated()
                                 .requestMatchers(HttpMethod.GET,"/megaflix/playlist/favorites").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/megaflix/playlist/user/{userId}/favorites").authenticated()
+                                .requestMatchers(HttpMethod.POST,"/megaflix/streaming").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/megaflix/streaming").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/megaflix/streaming/{id}").permitAll()
+                                .requestMatchers(HttpMethod.PUT,"/megaflix/streaming/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE,"/megaflix/streaming/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/megaflix/streaming/filmes/{id}").permitAll()
+                                .requestMatchers(HttpMethod.DELETE,"/megaflix/streaming/{streamingId}/movie/{movieId}").hasRole("ADMIN")
 
                         ).httpBasic(Customizer.withDefaults());
 
@@ -50,4 +59,8 @@ public class SecurityConfig {
     }
 
 
+    @Bean
+    public PasswordEncoder passwordEncoder () {
+        return new BCryptPasswordEncoder();
+    }
 }
