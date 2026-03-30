@@ -60,8 +60,8 @@ public class UserMovieController {
     }
 
     @PostMapping("/unfavorite/{relationId}")
-    public ResponseEntity<Void> desfavoritarFilme (@PathVariable Long relationId) {
-        userMovieService.removerFavorito(relationId);
+    public ResponseEntity<Void> desfavoritarFilme (@RequestBody @Valid UserLoginRequest userLoginRequest,@PathVariable Long relationId) {
+        userMovieService.removerFavorito(userLoginRequest,relationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
