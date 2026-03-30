@@ -9,6 +9,7 @@ import com.MegaFlixTV.MegaFlix.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserController {
     public ResponseEntity<UserResponse> criarUsuario (@RequestBody @Valid UserRequest userRequest) {
          return ResponseEntity.status(HttpStatus.CREATED).body(userService.criarUsuario(userRequest));
     }
+
 
     @GetMapping()
     public ResponseEntity<List<UserResponse>> listarUsuarios () {
@@ -53,5 +55,4 @@ public class UserController {
     public ResponseEntity<UserLoginResponse> login (@RequestBody @Valid UserLoginRequest userLoginRequest) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest));
     }
-
 }
