@@ -1,5 +1,6 @@
 package com.MegaFlixTV.MegaFlix.service;
 
+import com.MegaFlixTV.MegaFlix.config.security.SecurityConfig;
 import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
@@ -9,6 +10,7 @@ import com.MegaFlixTV.MegaFlix.exception.InvalidCredentialsException;
 import com.MegaFlixTV.MegaFlix.exception.UserNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.UserMapper;
 import com.MegaFlixTV.MegaFlix.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +20,11 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponse> listarUsuarios () {
@@ -38,9 +42,12 @@ public class UserService {
     }
 
     public UserResponse criarUsuario (UserRequest userRequest) {
-        User salvarUsuario = userRepository.save(UserMapper.mapToEntity(userRequest));
+        User usuario = UserMapper.mapToEntity(userRequest);
+        usuario.setPassword(passwordEncoder.encode(userRequest.password()));
 
-        return UserMapper.mapToResponse(salvarUsuario);
+        userRepository.save(usuario);
+
+        return UserMapper.mapToResponse(usuario);
     }
 
     public UserResponse alterarUsuarioCompleto (Long id,UserRequest userRequest) {
@@ -64,7 +71,7 @@ public class UserService {
     public UserLoginResponse logarUsuario (UserLoginRequest userLoginRequest) {
         User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados invalidos"));
 
-        if (!userLoginRequest.password().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(userLoginRequest.password(),user.getPassword())) {
             throw new InvalidCredentialsException("Dados invalidos");
         }
 
