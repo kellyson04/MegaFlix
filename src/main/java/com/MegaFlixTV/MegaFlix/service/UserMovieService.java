@@ -15,6 +15,7 @@ import com.MegaFlixTV.MegaFlix.mapper.UserMovieMapper;
 import com.MegaFlixTV.MegaFlix.repository.MovieRepository;
 import com.MegaFlixTV.MegaFlix.repository.UserMovieRepository;
 import com.MegaFlixTV.MegaFlix.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +27,13 @@ public class UserMovieService {
     private final UserMovieRepository userMovieRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserMovieService(UserMovieRepository userMovieRepository, UserRepository userRepository, MovieRepository movieRepository) {
+    public UserMovieService(UserMovieRepository userMovieRepository, UserRepository userRepository, MovieRepository movieRepository, PasswordEncoder passwordEncoder) {
         this.userMovieRepository = userMovieRepository;
         this.userRepository = userRepository;
         this.movieRepository = movieRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserMovieResponse adicionarFilmeAoUsuario (Long user,Long movie) {
@@ -92,11 +95,13 @@ public class UserMovieService {
     public void adicionarFavorito (UserLoginRequest userLoginRequest,Long relacaoId) {
 
         User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados de Login Invalidos."));
-        UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("Relação não existente."));
 
-        if (!userLoginRequest.password().equals(user.getPassword())) {
+
+        if (!passwordEncoder.matches(userLoginRequest.password(),user.getPassword())) {
             throw new InvalidCredentialsException("Dados de Login Invalidos.");
         }
+
+        UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("Relação não existente."));
 
         if (!userLoginRequest.user().equals(relacao.getUser().getUser())) {
             throw new RelationNotFoundException("Voce está tentando favoritar um filme que não é da sua Playlist.");
@@ -113,7 +118,8 @@ public class UserMovieService {
     public void removerFavorito (UserLoginRequest userLoginRequest,Long relacaoId) {
         User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados de Login Invalidos."));
 
-        if (!userLoginRequest.password().equals(user.getPassword())) {
+
+        if (!passwordEncoder.matches(userLoginRequest.password(),user.getPassword())) {
             throw new InvalidCredentialsException("Dados de Login Invalidos.");
         }
 
@@ -123,12 +129,12 @@ public class UserMovieService {
             throw new RelationNotFoundException("Voce está tentando desfavoritar um filme que não é da sua Playlist.");
         }
 
-        if (userMovie.isFavorite()) {
-            userMovie.setFavorite(false);
-            userMovieRepository.save(userMovie);
-        }else {
+        if (!userMovie.isFavorite()) {
             throw new RuntimeException("O filme não esta favoritado!");
         }
+
+        userMovie.setFavorite(false);
+        userMovieRepository.save(userMovie);
     }
 
     public List<UserMovieResponse> listarFilmesFavoritados () {
