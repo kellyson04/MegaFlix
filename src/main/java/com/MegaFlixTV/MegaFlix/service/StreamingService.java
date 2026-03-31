@@ -68,7 +68,7 @@ public class StreamingService {
     }
 
     public List<MovieResponse> filmesNoStreaming (Long streamingid) {
-        Streaming streamings = streamingRepository.findStreamingById(streamingid);
+        Streaming streamings = streamingRepository.findById(streamingid).orElseThrow(() -> new StreamingNotFoundException("Este Streaming não existe."));
 
         List<MovieResponse> filmes = streamings.getMovie()
                 .stream()
