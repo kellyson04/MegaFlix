@@ -45,16 +45,15 @@ public class UserService {
         User usuario = UserMapper.mapToEntity(userRequest);
         usuario.setPassword(passwordEncoder.encode(userRequest.password()));
 
-        userRepository.save(usuario);
 
-        return UserMapper.mapToResponse(usuario);
+        return UserMapper.mapToResponse(userRepository.save(usuario));
     }
 
     public UserResponse alterarUsuarioCompleto (Long id,UserRequest userRequest) {
         User acharUsuario = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Alteração impossivel devido a ID inexistente"));
 
         acharUsuario.setUser(userRequest.user());
-        acharUsuario.setPassword(userRequest.password());
+        acharUsuario.setPassword(passwordEncoder.encode(userRequest.password()));
         acharUsuario.setEmail(userRequest.email());
 
         userRepository.save(acharUsuario);
