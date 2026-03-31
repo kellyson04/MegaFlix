@@ -67,7 +67,7 @@ public class UserMovieController {
 
     @GetMapping("/favorites")
     public ResponseEntity<List<UserMovieResponse>> filmesFavoritados () {
-        return ResponseEntity.status(HttpStatus.FOUND).body(userMovieService.listarFilmesFavoritados());
+        return ResponseEntity.ok(userMovieService.listarFilmesFavoritados());
     }
 
     @GetMapping("/user/{userId}/favorites")
