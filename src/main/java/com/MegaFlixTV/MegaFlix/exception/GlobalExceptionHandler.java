@@ -42,4 +42,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorResponse> businessRuleExceptionHandler (BusinessRuleException b) {
+        ErrorResponse errorResponse = new ErrorResponse(409,"CONFLICT",b.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
 }
