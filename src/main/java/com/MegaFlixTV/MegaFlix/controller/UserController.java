@@ -1,6 +1,7 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
 
+import com.MegaFlixTV.MegaFlix.controller.request.ChangePasswordRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
@@ -52,6 +53,12 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login (@RequestBody @Valid UserLoginRequest userLoginRequest) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest));
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<Void> trocarSenha (@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
+        userService.trocarSenha(changePasswordRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
