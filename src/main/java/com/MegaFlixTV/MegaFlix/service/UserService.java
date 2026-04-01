@@ -1,11 +1,13 @@
 package com.MegaFlixTV.MegaFlix.service;
 
 import com.MegaFlixTV.MegaFlix.config.security.SecurityConfig;
+import com.MegaFlixTV.MegaFlix.controller.request.ChangePasswordRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.entity.User;
+import com.MegaFlixTV.MegaFlix.exception.BusinessRuleException;
 import com.MegaFlixTV.MegaFlix.exception.InvalidCredentialsException;
 import com.MegaFlixTV.MegaFlix.exception.UserNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.UserMapper;
@@ -75,6 +77,22 @@ public class UserService {
         }
 
         return new UserLoginResponse(userLoginRequest.user());
+    }
+
+    public void trocarSenha (ChangePasswordRequest changePasswordRequest) {
+        User user = userRepository.findUserByUser(changePasswordRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados invalidos."));
+
+
+        if (!passwordEncoder.matches(changePasswordRequest.currentPassword(),user.getPassword())) {
+            throw new InvalidCredentialsException("Dados invalidos");
+        }
+
+        if (changePasswordRequest.currentPassword().equals(changePasswordRequest.newPassword())) {
+            throw new BusinessRuleException("A nova senha tem que ser diferente da atual.");
+        }
+
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
+        userRepository.save(user);
     }
 
 
