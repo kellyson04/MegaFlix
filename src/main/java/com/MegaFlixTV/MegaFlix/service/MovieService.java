@@ -5,6 +5,7 @@ import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.Streaming;
+import com.MegaFlixTV.MegaFlix.exception.BusinessRuleException;
 import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.StreamingNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.MovieMapper;
@@ -116,6 +117,10 @@ public class MovieService {
     public MovieResponse adicionarFilmeNoStreaming (Long movieId,Long streamingId) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado!"));
         Streaming streaming = streamingRepository.findById(streamingId).orElseThrow(() -> new StreamingNotFoundException("Streaming não encontrado"));
+
+        if (movieRepository.existsByIdAndStreamingId(movieId,streamingId)) {
+            throw new BusinessRuleException("Esse filme ja existe no Streaming");
+        }
 
         streaming.getMovie().add(movie);
 
