@@ -133,17 +133,12 @@ public class UserMovieService {
     }
 
     public List<UserMovieResponse> listarFilmesFavoritados () {
-        List<UserMovie> filmesFavoritadosEntity = userMovieRepository.findAll()
+       List<UserMovie> userMovies = userMovieRepository.findByFavoriteIsTrue();
+
+        return userMovies
                 .stream()
-                .filter(filme -> filme.isFavorite())
+                .map(userMovie -> UserMovieMapper.mapToResponse(userMovie))
                 .toList();
-
-        List<UserMovieResponse> filmesFavoritados =
-                filmesFavoritadosEntity.stream()
-                        .map(filme -> UserMovieMapper.mapToResponse(filme))
-                        .toList();
-
-        return filmesFavoritados;
     }
 
     public List<UserMovieResponse> filmesFavoritadosDoUsuario (Long userId) {
