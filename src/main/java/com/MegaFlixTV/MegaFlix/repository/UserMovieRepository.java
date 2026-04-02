@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface UserMovieRepository extends JpaRepository<UserMovie,Long> {
 
     Optional<UserMovie> findByUserAndMovie (User user, Movie movie);
+    List<UserMovie> findByFavoriteIsTrue();
     List<UserMovie> findByUserAndFavoriteTrue(User user);
     boolean existsByUserIdAndMovieId(Long userId,Long movieId);
 }
