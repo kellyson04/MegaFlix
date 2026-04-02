@@ -2,6 +2,7 @@ package com.MegaFlixTV.MegaFlix.controller;
 
 
 import com.MegaFlixTV.MegaFlix.controller.request.ChangePasswordRequest;
+import com.MegaFlixTV.MegaFlix.controller.request.ChangeUserDataRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
@@ -42,6 +43,11 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> alterarUsuarioPorCompleto (@PathVariable Long id, @RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.ok(userService.alterarUsuarioCompleto(id, userRequest));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> alterarUsuarioParcialmente (@PathVariable Long id,@RequestBody ChangeUserDataRequest changeUserDataRequest) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.alterarUsuarioParcialmente(id,changeUserDataRequest));
     }
 
     @DeleteMapping("/{id}")
