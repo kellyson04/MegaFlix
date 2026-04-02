@@ -82,12 +82,12 @@ public class StreamingService {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado"));
         Streaming streaming = streamingRepository.findById(streamingId).orElseThrow(() -> new StreamingNotFoundException("Streaming não encontrado"));
 
-        if (streaming.getMovie().contains(movie)) {
-            streaming.getMovie().remove(movie);
-            streamingRepository.save(streaming);
-        }else {
-            throw new RelationNotFoundException("Esse streaming não possui este filme");
+        if (!streamingRepository.existsByIdAndMovieId(streamingId,movieId)) {
+            throw new RelationNotFoundException("Esse Filme não existe no Streaming mencionado");
         }
 
+
+        streaming.getMovie().remove(movie);
+        streamingRepository.save(streaming);
     }
 }
