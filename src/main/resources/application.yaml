@@ -24,6 +24,7 @@ spring:
     user:
       name: admin
       password: admin123
+      roles: ADMIN
 
 server:
   port: 8080
