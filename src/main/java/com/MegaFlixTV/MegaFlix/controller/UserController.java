@@ -1,6 +1,8 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
 
+import com.MegaFlixTV.MegaFlix.controller.request.ChangePasswordRequest;
+import com.MegaFlixTV.MegaFlix.controller.request.ChangeUserDataRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
@@ -43,6 +45,11 @@ public class UserController {
         return ResponseEntity.ok(userService.alterarUsuarioCompleto(id, userRequest));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> alterarUsuarioParcialmente (@PathVariable Long id,@RequestBody ChangeUserDataRequest changeUserDataRequest) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.alterarUsuarioParcialmente(id,changeUserDataRequest));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario (@PathVariable Long id) {
         userService.deletarUsuario(id);
@@ -52,6 +59,12 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login (@RequestBody @Valid UserLoginRequest userLoginRequest) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest));
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<Void> trocarSenha (@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
+        userService.trocarSenha(changePasswordRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

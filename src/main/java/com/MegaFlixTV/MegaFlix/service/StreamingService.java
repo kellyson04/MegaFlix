@@ -5,6 +5,7 @@ import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.Streaming;
+import com.MegaFlixTV.MegaFlix.exception.BusinessRuleException;
 import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.RelationNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.StreamingNotFoundException;
@@ -39,6 +40,10 @@ public class StreamingService {
 
 
     public StreamingResponse salvarStreaming (StreamingRequest streamingRequest) {
+        if (streamingRepository.existsByName(streamingRequest.name())) {
+            throw new BusinessRuleException("Este nome de Streaming ja esta em uso");
+        }
+
         Streaming streaming = streamingRepository.save(StreamingMapper.toEntity(streamingRequest));
 
         return StreamingMapper.toResponse(streaming);
@@ -54,6 +59,14 @@ public class StreamingService {
     public StreamingResponse alterarStreamingPorCompleto (Long id, StreamingRequest streamingRequest) {
         Streaming acharStreaming = streamingRepository.findById(id).orElseThrow(() -> new StreamingNotFoundException("Esse Streaming não existe."));
 
+        if (streamingRepository.existsByName(streamingRequest.name())) {
+            throw new BusinessRuleException("Este nome de Streaming ja esta em uso");
+        }
+
+        if (streamingRequest.name().equalsIgnoreCase(acharStreaming.getName())) {
+            throw new BusinessRuleException("Digite um novo nome");
+        }
+
         acharStreaming.setName(streamingRequest.name());
 
         streamingRepository.save(acharStreaming);
@@ -68,7 +81,7 @@ public class StreamingService {
     }
 
     public List<MovieResponse> filmesNoStreaming (Long streamingid) {
-        Streaming streamings = streamingRepository.findStreamingById(streamingid);
+        Streaming streamings = streamingRepository.findById(streamingid).orElseThrow(() -> new StreamingNotFoundException("Este Streaming não existe."));
 
         List<MovieResponse> filmes = streamings.getMovie()
                 .stream()
@@ -82,12 +95,12 @@ public class StreamingService {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado"));
         Streaming streaming = streamingRepository.findById(streamingId).orElseThrow(() -> new StreamingNotFoundException("Streaming não encontrado"));
 
-        if (streaming.getMovie().contains(movie)) {
-            streaming.getMovie().remove(movie);
-            streamingRepository.save(streaming);
-        }else {
-            throw new RelationNotFoundException("Esse streaming não possui este filme");
+        if (!streamingRepository.existsByIdAndMovieId(streamingId,movieId)) {
+            throw new RelationNotFoundException("Esse Filme não existe no Streaming mencionado");
         }
 
+
+        streaming.getMovie().remove(movie);
+        streamingRepository.save(streaming);
     }
 }

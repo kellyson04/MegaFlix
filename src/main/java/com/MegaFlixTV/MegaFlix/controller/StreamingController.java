@@ -50,7 +50,7 @@ public class StreamingController {
 
     @GetMapping("/filmes/{id}")
     public ResponseEntity<List<MovieResponse>> listarFilmesDisponiveisNoStreaming (@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(streamingService.filmesNoStreaming(id));
+        return ResponseEntity.ok(streamingService.filmesNoStreaming(id));
     }
 
     @DeleteMapping("/{streamingId}/movie/{movieId}")
