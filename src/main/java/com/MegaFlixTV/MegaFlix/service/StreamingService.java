@@ -5,6 +5,7 @@ import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
 import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.Streaming;
+import com.MegaFlixTV.MegaFlix.exception.BusinessRuleException;
 import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.RelationNotFoundException;
 import com.MegaFlixTV.MegaFlix.exception.StreamingNotFoundException;
@@ -39,6 +40,10 @@ public class StreamingService {
 
 
     public StreamingResponse salvarStreaming (StreamingRequest streamingRequest) {
+        if (streamingRepository.existsByName(streamingRequest.name())) {
+            throw new BusinessRuleException("Este nome de Streaming ja esta em uso");
+        }
+
         Streaming streaming = streamingRepository.save(StreamingMapper.toEntity(streamingRequest));
 
         return StreamingMapper.toResponse(streaming);
@@ -53,6 +58,14 @@ public class StreamingService {
 
     public StreamingResponse alterarStreamingPorCompleto (Long id, StreamingRequest streamingRequest) {
         Streaming acharStreaming = streamingRepository.findById(id).orElseThrow(() -> new StreamingNotFoundException("Esse Streaming não existe."));
+
+        if (streamingRepository.existsByName(streamingRequest.name())) {
+            throw new BusinessRuleException("Este nome de Streaming ja esta em uso");
+        }
+
+        if (streamingRequest.name().equalsIgnoreCase(acharStreaming.getName())) {
+            throw new BusinessRuleException("Digite um novo nome");
+        }
 
         acharStreaming.setName(streamingRequest.name());
 
