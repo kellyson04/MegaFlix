@@ -46,20 +46,20 @@ public class UserMovieController {
     }
 
 
-    @PostMapping("/watch/user/{userId}/movie/{movieId}")
+    @PatchMapping("/user/{userId}/movie/{movieId}/watched")
     public ResponseEntity<UserMovieResponse> assistirFilme (@PathVariable Long userId,@PathVariable Long movieId) {
 
         return ResponseEntity.ok(userMovieService.assistirFilme(userId,movieId));
     }
 
-    @PostMapping("/favorite/{relationId}")
+    @PatchMapping("/{relationId}/favorite")
     public ResponseEntity<Void> favoritarFilme (@RequestBody @Valid UserLoginRequest userLoginRequest, @PathVariable Long relationId) {
         userMovieService.adicionarFavorito(userLoginRequest,relationId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/unfavorite/{relationId}")
+    @PatchMapping("/{relationId}/unfavorite")
     public ResponseEntity<Void> desfavoritarFilme (@RequestBody @Valid UserLoginRequest userLoginRequest,@PathVariable Long relationId) {
         userMovieService.removerFavorito(userLoginRequest,relationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

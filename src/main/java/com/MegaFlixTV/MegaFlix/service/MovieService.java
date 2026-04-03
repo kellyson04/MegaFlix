@@ -30,12 +30,39 @@ public class MovieService {
         this.streamingRepository = streamingRepository;
     }
 
-    public List<MovieResponse> listarFilmes () {
+    public List<MovieResponse> listarFilmes (String genero,String titulo,Double duracaoMaior,Double duracaoMenor) {
         List<Movie> moviesEntity = movieRepository.findAll();
+
+        if (genero != null && !genero.isBlank()) {
+            return movieRepository.findMovieByGenreContainingIgnoreCase(genero)
+                    .stream()
+                    .map(filme -> MovieMapper.toResponse(filme))
+                    .toList();
+        }
+        if (titulo != null && !titulo.isBlank() ) {
+            return movieRepository.findMovieByMovieContainingIgnoreCase(titulo)
+                    .stream()
+                    .map(filme -> MovieMapper.toResponse(filme))
+                    .toList();
+        }
+        if(duracaoMaior != null) {
+            return movieRepository.findMovieByDurationGreaterThanEqual(duracaoMaior)
+                    .stream()
+                    .map(filme -> MovieMapper.toResponse(filme))
+                    .toList();
+        }
+        if (duracaoMenor != null) {
+            return movieRepository.findMovieByDurationLessThanEqual(duracaoMenor)
+                    .stream()
+                    .map(filme -> MovieMapper.toResponse(filme))
+                    .toList();
+        }
 
         return moviesEntity.stream()
                 .map(movie -> MovieMapper.toResponse(movie))
                 .toList();
+
+
     }
 
     public MovieResponse adicionarFilme (MovieRequest movieRequest) {
@@ -49,6 +76,7 @@ public class MovieService {
 
         return MovieMapper.toResponse(procurarFilme);
     }
+
 
     public MovieResponse alterarFilmePorCompleto (Long id, MovieRequest movieRequest) {
         Movie procurarFilme = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado"));
@@ -67,51 +95,6 @@ public class MovieService {
         Movie filmePraDeletar = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Impossivel Deletar um filme inexistente"));
 
         movieRepository.deleteById(id);
-    }
-
-    public List<MovieResponse> listarFilmesPorGenero (String genre) {
-
-
-        List<MovieResponse> listarFilmesPeloGenero = movieRepository.findMovieByGenre(genre).stream()
-                .map(movie -> MovieMapper.toResponse(movie))
-                .toList();
-
-        return listarFilmesPeloGenero;
-    }
-
-    public List<MovieResponse> listarFilmesPelaDuracaoMaior (double duration) {
-
-        List<MovieResponse> listarFilmesDuracaoMaior = movieRepository.findMovieByDurationGreaterThanEqual(duration)
-                .stream()
-                .map(movie -> MovieMapper.toResponse(movie))
-                .toList();
-
-        return listarFilmesDuracaoMaior;
-    }
-
-    public List<MovieResponse> listarFilmesPelaDuracaoMenor (double duration) {
-
-        List<MovieResponse> listarFilmesDuracaoMenor = movieRepository.findMovieByDurationLessThanEqual(duration)
-                .stream()
-                .map(movie -> MovieMapper.toResponse(movie))
-                .toList();
-
-        return listarFilmesDuracaoMenor;
-    }
-
-    public List<MovieResponse> listarFilmesPeloTitulo (String title) {
-        List<Movie> acharFilme = movieRepository.findMovieByMovieContainingIgnoreCase(title);
-
-        if (acharFilme.isEmpty()) {
-            throw new MovieNotFoundException("Não possuimos este filme no catalogo!");
-        }else {
-            List<MovieResponse> listarPeloTitulo = movieRepository.findMovieByMovieContainingIgnoreCase(title)
-                    .stream()
-                    .map(movie -> MovieMapper.toResponse(movie))
-                    .toList();
-
-            return listarPeloTitulo;
-        }
     }
 
     public MovieResponse adicionarFilmeNoStreaming (Long movieId,Long streamingId) {
