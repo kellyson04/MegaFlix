@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface StreamingRepository extends JpaRepository <Streaming, Long> {
     boolean existsByIdAndMovieId(Long streamingId,Long movieId);
+    boolean existsByName(String name);
 }
