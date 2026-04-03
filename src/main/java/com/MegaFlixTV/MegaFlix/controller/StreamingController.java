@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/megaflix/streaming")
+@RequestMapping("/megaflix/streamings")
 public class StreamingController {
     private final StreamingService streamingService;
 
@@ -48,12 +48,12 @@ public class StreamingController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/filmes/{id}")
-    public ResponseEntity<List<MovieResponse>> listarFilmesDisponiveisNoStreaming (@PathVariable Long id) {
-        return ResponseEntity.ok(streamingService.filmesNoStreaming(id));
+    @GetMapping("/{streamingId}/movies")
+    public ResponseEntity<List<MovieResponse>> listarFilmesDisponiveisNoStreaming (@PathVariable Long streamingId) {
+        return ResponseEntity.ok(streamingService.filmesNoStreaming(streamingId));
     }
 
-    @DeleteMapping("/{streamingId}/movie/{movieId}")
+    @DeleteMapping("/{streamingId}/movies/{movieId}")
     public ResponseEntity<Void> removerFilmeDoStreaming (@PathVariable Long streamingId,@PathVariable Long movieId) {
         streamingService.removerFilmeDoStreaming(streamingId,movieId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

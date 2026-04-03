@@ -11,6 +11,7 @@ import com.MegaFlixTV.MegaFlix.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,8 +62,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest));
     }
 
-    @PutMapping("/change-password")
-    public ResponseEntity<Void> trocarSenha (@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<Void> trocarSenha (@PathVariable Long userId,@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
         userService.trocarSenha(changePasswordRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
