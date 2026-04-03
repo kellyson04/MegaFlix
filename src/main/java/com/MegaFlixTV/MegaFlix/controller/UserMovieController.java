@@ -52,7 +52,7 @@ public class UserMovieController {
         return ResponseEntity.ok(userMovieService.assistirFilme(userId,movieId));
     }
 
-    @PostMapping("/{relationId}/favorite")
+    @PatchMapping("/{relationId}/favorite")
     public ResponseEntity<Void> favoritarFilme (@RequestBody @Valid UserLoginRequest userLoginRequest, @PathVariable Long relationId) {
         userMovieService.adicionarFavorito(userLoginRequest,relationId);
 
