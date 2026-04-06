@@ -30,28 +30,38 @@ public class MovieService {
         this.streamingRepository = streamingRepository;
     }
 
-    public List<MovieResponse> listarFilmes (String genero,String titulo,Double duracaoMaior,Double duracaoMenor) {
+    public List<MovieResponse> listarFilmes (String title,String genre,Double maxDuration,Double minDuration,Integer releaseYear,Double rating) {
         List<Movie> moviesFiltro = movieRepository.findAll();
 
-        if (genero != null && !genero.isBlank()) {
+        if (title != null && !title.isBlank() ) {
             moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getGenre().toUpperCase().contains(genero.toUpperCase()))
+                    .filter(filme -> filme.getMovie().toUpperCase().contains(title.toUpperCase()))
                     .toList();
         }
-        if (titulo != null && !titulo.isBlank() ) {
-                moviesFiltro = moviesFiltro.stream()
-                        .filter(filme -> filme.getMovie().toUpperCase().contains(titulo.toUpperCase()))
-                        .toList();
-        }
-        if(duracaoMaior != null) {
+        if (genre != null && !genre.isBlank()) {
             moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getDuration() > duracaoMaior)
+                    .filter(filme -> filme.getGenre().toUpperCase().contains(genre.toUpperCase()))
+                    .toList();
+        }
+        if(maxDuration != null) {
+            moviesFiltro = moviesFiltro.stream()
+                    .filter(filme -> filme.getDuration() < maxDuration)
                     .toList();
 
         }
-        if (duracaoMenor != null) {
+        if (minDuration != null) {
             moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getDuration() < duracaoMenor)
+                    .filter(filme -> filme.getDuration() > minDuration)
+                    .toList();
+        }
+        if (releaseYear != null) {
+            moviesFiltro = moviesFiltro.stream()
+                    .filter(filme -> filme.getReleaseYear() != null && filme.getReleaseYear().equals(releaseYear))
+                    .toList();
+        }
+        if (rating != null) {
+            moviesFiltro = moviesFiltro.stream()
+                    .filter(filme -> filme.getRating() != null && filme.getRating().equals(rating))
                     .toList();
         }
         return moviesFiltro.stream()
@@ -79,6 +89,8 @@ public class MovieService {
         procurarFilme.setMovie(movieRequest.movie());
         procurarFilme.setGenre(movieRequest.genre());
         procurarFilme.setDuration(movieRequest.duration());
+        procurarFilme.setReleaseYear(movieRequest.release_year());
+        procurarFilme.setRating(movieRequest.rating());
 
         movieRepository.save(procurarFilme);
 
