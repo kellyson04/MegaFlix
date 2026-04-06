@@ -27,11 +27,13 @@ public class MoviesController {
 
 
     @GetMapping()
-    public ResponseEntity<List<MovieResponse>> listarFilmes (@RequestParam(required = false) String genero,
-                                                             @RequestParam(required = false) String titulo,
-                                                             @RequestParam(required = false) Double duracaoMaior,
-                                                             @RequestParam(required = false) Double duracaoMenor) {
-        return ResponseEntity.ok(movieService.listarFilmes(genero,titulo,duracaoMaior,duracaoMenor));
+    public ResponseEntity<List<MovieResponse>> listarFilmes (@RequestParam(required = false) String title,
+                                                             @RequestParam(required = false) String genre,
+                                                             @RequestParam(required = false) Double maxDuration,
+                                                             @RequestParam(required = false) Double minDuration,
+                                                             @RequestParam(required = false) Integer releaseYear,
+                                                             @RequestParam(required = false) Double rating) {
+        return ResponseEntity.ok(movieService.listarFilmes(title,genre,maxDuration,minDuration,releaseYear,rating));
     }
 
     @GetMapping("/{id}")
