@@ -31,38 +31,32 @@ public class MovieService {
     }
 
     public List<MovieResponse> listarFilmes (String genero,String titulo,Double duracaoMaior,Double duracaoMenor) {
-        List<Movie> moviesEntity = movieRepository.findAll();
+        List<Movie> moviesFiltro = movieRepository.findAll();
 
         if (genero != null && !genero.isBlank()) {
-            return movieRepository.findMovieByGenreContainingIgnoreCase(genero)
-                    .stream()
-                    .map(filme -> MovieMapper.toResponse(filme))
+            moviesFiltro = moviesFiltro.stream()
+                    .filter(filme -> filme.getGenre().toUpperCase().contains(genero.toUpperCase()))
                     .toList();
         }
         if (titulo != null && !titulo.isBlank() ) {
-            return movieRepository.findMovieByMovieContainingIgnoreCase(titulo)
-                    .stream()
-                    .map(filme -> MovieMapper.toResponse(filme))
-                    .toList();
+                moviesFiltro = moviesFiltro.stream()
+                        .filter(filme -> filme.getMovie().toUpperCase().contains(titulo.toUpperCase()))
+                        .toList();
         }
         if(duracaoMaior != null) {
-            return movieRepository.findMovieByDurationGreaterThanEqual(duracaoMaior)
-                    .stream()
-                    .map(filme -> MovieMapper.toResponse(filme))
+            moviesFiltro = moviesFiltro.stream()
+                    .filter(filme -> filme.getDuration() > duracaoMaior)
                     .toList();
+
         }
         if (duracaoMenor != null) {
-            return movieRepository.findMovieByDurationLessThanEqual(duracaoMenor)
-                    .stream()
-                    .map(filme -> MovieMapper.toResponse(filme))
+            moviesFiltro = moviesFiltro.stream()
+                    .filter(filme -> filme.getDuration() < duracaoMenor)
                     .toList();
         }
-
-        return moviesEntity.stream()
-                .map(movie -> MovieMapper.toResponse(movie))
+        return moviesFiltro.stream()
+                .map(filme -> MovieMapper.toResponse(filme))
                 .toList();
-
-
     }
 
     public MovieResponse adicionarFilme (MovieRequest movieRequest) {
