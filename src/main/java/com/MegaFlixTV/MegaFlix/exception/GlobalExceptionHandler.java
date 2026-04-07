@@ -48,4 +48,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
+
+    @ExceptionHandler(NoChangesDetectedException.class)
+    public ResponseEntity<ErrorResponse> invalidRequestHandle (NoChangesDetectedException n) {
+        ErrorResponse errorResponse = new ErrorResponse(400,"BAD_REQUEST",n.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }
