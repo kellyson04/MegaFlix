@@ -1,5 +1,6 @@
 package com.MegaFlixTV.MegaFlix.service;
 
+import com.MegaFlixTV.MegaFlix.controller.request.MoviePatchRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.MovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
@@ -7,6 +8,7 @@ import com.MegaFlixTV.MegaFlix.entity.Movie;
 import com.MegaFlixTV.MegaFlix.entity.Streaming;
 import com.MegaFlixTV.MegaFlix.exception.BusinessRuleException;
 import com.MegaFlixTV.MegaFlix.exception.MovieNotFoundException;
+import com.MegaFlixTV.MegaFlix.exception.NoChangesDetectedException;
 import com.MegaFlixTV.MegaFlix.exception.StreamingNotFoundException;
 import com.MegaFlixTV.MegaFlix.mapper.MovieMapper;
 import com.MegaFlixTV.MegaFlix.mapper.StreamingMapper;
@@ -89,12 +91,46 @@ public class MovieService {
         procurarFilme.setMovie(movieRequest.movie());
         procurarFilme.setGenre(movieRequest.genre());
         procurarFilme.setDuration(movieRequest.duration());
-        procurarFilme.setReleaseYear(movieRequest.release_year());
+        procurarFilme.setReleaseYear(movieRequest.releaseYear());
         procurarFilme.setRating(movieRequest.rating());
 
         movieRepository.save(procurarFilme);
 
         return MovieMapper.toResponse(procurarFilme);
+    }
+
+    public MovieResponse alterarFilmeParcialmente (Long id, MoviePatchRequest moviePatchRequest) {
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado!"));
+
+        boolean alterou = false;
+        if (moviePatchRequest.movie() != null && !moviePatchRequest.movie().isBlank()) {
+            movie.setMovie(moviePatchRequest.movie());
+            alterou = true;
+        }
+        if (moviePatchRequest.genre() != null && !moviePatchRequest.genre().isBlank()) {
+            movie.setGenre(moviePatchRequest.genre());
+            alterou = true;
+        }
+        if (moviePatchRequest.duration() != null) {
+            movie.setDuration(moviePatchRequest.duration());
+            alterou = true;
+        }
+        if (moviePatchRequest.releaseYear() != null) {
+            movie.setReleaseYear(moviePatchRequest.releaseYear());
+            alterou = true;
+        }
+        if (moviePatchRequest.rating() != null) {
+            movie.setRating(moviePatchRequest.rating());
+            alterou = true;
+        }
+
+        if (alterou == false) {
+            throw new NoChangesDetectedException("Voce não alterou nenhum campo.");
+        }
+
+        movieRepository.save(movie);
+
+        return MovieMapper.toResponse(movie);
     }
 
     public void deletarFilme (Long id) {
