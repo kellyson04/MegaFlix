@@ -1,5 +1,6 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
+import com.MegaFlixTV.MegaFlix.controller.request.MoviePatchRequest;
 import com.MegaFlixTV.MegaFlix.controller.request.MovieRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.MovieResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.StreamingResponse;
@@ -42,9 +43,14 @@ public class MoviesController {
     }
 
 
-    @PutMapping("{id}")
-    public ResponseEntity<MovieResponse> AlterarFilmePorCompleto (@PathVariable Long id, @RequestBody @Valid MovieRequest movieRequest) {
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieResponse> alterarFilmePorCompleto (@PathVariable Long id, @RequestBody @Valid MovieRequest movieRequest) {
          return ResponseEntity.ok(movieService.alterarFilmePorCompleto(id,movieRequest));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<MovieResponse> alterarFilmeParcialmente (@PathVariable Long id,@RequestBody @Valid MoviePatchRequest moviePatchRequest) {
+        return ResponseEntity.ok(movieService.alterarFilmeParcialmente(id,moviePatchRequest));
     }
 
 
