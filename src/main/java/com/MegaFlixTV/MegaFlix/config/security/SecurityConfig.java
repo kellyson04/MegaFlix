@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/megaflix/movies").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/megaflix/movies/{id}").permitAll()
                                 .requestMatchers(HttpMethod.PUT,"/megaflix/movies/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH,"/megaflix/movies/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE,"/megaflix/movies/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST,"/megaflix/movies/{movieId}/streaming/{streamingId}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/megaflix/movies/{movieId}/streamings").permitAll()
