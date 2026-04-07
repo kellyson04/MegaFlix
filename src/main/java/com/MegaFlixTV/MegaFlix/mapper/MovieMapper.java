@@ -25,7 +25,7 @@ public class MovieMapper {
                 .movie(movieRequest.movie())
                 .genre(movieRequest.genre())
                 .duration(movieRequest.duration())
-                .releaseYear(movieRequest.release_year())
+                .releaseYear(movieRequest.releaseYear())
                 .rating(movieRequest.rating())
                 .build();
     }

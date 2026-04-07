@@ -14,7 +14,7 @@ public record MovieRequest(
         @NotNull(message = "Ano de lançamento não pode estar vazio")
         @Min(1910)
         @Max(2026)
-        Integer release_year,
+        Integer releaseYear,
         @NotNull(message = "Nota do filme não pode estar vazia")
         @DecimalMin(value = "0.0",inclusive = true, message = "A nota do filme não pode ser negativa")
         @DecimalMax(value = "10.0",inclusive = true,message = "A nota do filme não pode ultrapassar 10")
