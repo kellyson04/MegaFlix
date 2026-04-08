@@ -66,8 +66,8 @@ public class MoviesController {
     }
 
     @GetMapping("/{movieId}/streamings")
-    public ResponseEntity<List<StreamingResponse>> StreamingsQuePossuemOFilme (@PathVariable Long movieId) {
-        return ResponseEntity.ok(movieService.StreamingsQueOFilmeSeEncontra(movieId));
+    public ResponseEntity<List<StreamingResponse>> streamingsQuePossuemOFilme (@PathVariable Long movieId) {
+        return ResponseEntity.ok(movieService.streamingsQueOFilmeSeEncontra(movieId));
     }
 
 }
