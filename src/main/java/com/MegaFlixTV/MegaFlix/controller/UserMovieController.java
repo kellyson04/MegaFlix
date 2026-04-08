@@ -48,8 +48,12 @@ public class UserMovieController {
 
     @PatchMapping("/user/{userId}/movie/{movieId}/watched")
     public ResponseEntity<UserMovieResponse> assistirFilme (@PathVariable Long userId,@PathVariable Long movieId) {
-
         return ResponseEntity.ok(userMovieService.assistirFilme(userId,movieId));
+    }
+
+    @PatchMapping("/user/{userId}/movie/{movieId}/unwatched")
+    public ResponseEntity<UserMovieResponse> desfazerAssistido (@PathVariable Long userId, @PathVariable Long movieId) {
+        return ResponseEntity.ok(userMovieService.desmarcarFilmeAssistido(userId,movieId));
     }
 
     @PatchMapping("/{relationId}/favorite")
