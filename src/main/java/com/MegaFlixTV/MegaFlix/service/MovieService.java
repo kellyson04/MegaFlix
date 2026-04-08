@@ -155,7 +155,7 @@ public class MovieService {
         return MovieMapper.toResponse(movie);
     }
 
-    public List<StreamingResponse> StreamingsQueOFilmeSeEncontra(Long movieId) {
+    public List<StreamingResponse> streamingsQueOFilmeSeEncontra(Long movieId) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Filme não existe"));
 
 
