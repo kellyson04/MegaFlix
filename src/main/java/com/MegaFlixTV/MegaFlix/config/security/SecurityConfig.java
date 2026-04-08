@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/megaflix/playlist/{id}").permitAll()
                                 .requestMatchers(HttpMethod.DELETE,"/megaflix/playlist/{id}").permitAll()
                                 .requestMatchers(HttpMethod.PATCH,"/megaflix/playlist/user/{userId}/movie/{movieId}/watched").authenticated()
+                                .requestMatchers(HttpMethod.PATCH,"/megaflix/playlist/user/{userId}/movie/{movieId}/unwatched").authenticated()
                                 .requestMatchers(HttpMethod.PATCH,"/megaflix/playlist/{relationId}/favorite").authenticated()
                                 .requestMatchers(HttpMethod.PATCH,"/megaflix/playlist/{relationId}/unfavorite").authenticated()
                                 .requestMatchers(HttpMethod.GET,"/megaflix/playlist/favorites").permitAll()
