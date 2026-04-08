@@ -91,10 +91,26 @@ public class UserMovieService {
             userMovieRepository.save(userMovie);
             return UserMovieMapper.mapToResponse(userMovie);
         }else {
-            throw new BusinessRuleException("O filme ja foi assistido!");
+            throw new NoChangesDetectedException("O filme ja foi assistido!");
         }
 
 
+    }
+
+    public UserMovieResponse desmarcarFilmeAssistido (Long userId, Long movieId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Filme não encontrado"));
+
+        UserMovie userMovie = userMovieRepository.findByUserAndMovie(user,movie).orElseThrow(() -> new RelationNotFoundException("O Usuario não possui o filme na Playlist"));
+
+        if (!userMovie.isWatched()) {
+            throw new NoChangesDetectedException("O filme não esta assistido!");
+        }
+
+        userMovie.setWatched(false);
+        userMovieRepository.save(userMovie);
+
+        return UserMovieMapper.mapToResponse(userMovie);
     }
 
     public void adicionarFavorito (UserLoginRequest userLoginRequest,Long relacaoId) {
@@ -111,7 +127,7 @@ public class UserMovieService {
             relacao.setFavorite(true);
             userMovieRepository.save(relacao);
         }else {
-            throw new BusinessRuleException("Filme ja esta favoritado");
+            throw new NoChangesDetectedException("Filme ja esta favoritado");
         }
     }
 
@@ -125,7 +141,7 @@ public class UserMovieService {
         }
 
         if (!userMovie.isFavorite()) {
-            throw new BusinessRuleException("O filme não esta favoritado!");
+            throw new NoChangesDetectedException("O filme não esta favoritado!");
         }
 
         userMovie.setFavorite(false);
