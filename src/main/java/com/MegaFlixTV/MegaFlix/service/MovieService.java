@@ -14,6 +14,8 @@ import com.MegaFlixTV.MegaFlix.mapper.MovieMapper;
 import com.MegaFlixTV.MegaFlix.mapper.StreamingMapper;
 import com.MegaFlixTV.MegaFlix.repository.MovieRepository;
 import com.MegaFlixTV.MegaFlix.repository.StreamingRepository;
+import com.MegaFlixTV.MegaFlix.repository.specification.MovieSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -33,38 +35,52 @@ public class MovieService {
     }
 
     public List<MovieResponse> listarFilmes (String title,String genre,Double maxDuration,Double minDuration,Integer releaseYear,Double rating) {
-        List<Movie> moviesFiltro = movieRepository.findAll();
+        Specification<Movie> spec = null;
+        List<Movie> moviesFiltro;
 
         if (title != null && !title.isBlank() ) {
-            moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getMovie().toUpperCase().contains(title.toUpperCase()))
-                    .toList();
+            spec = (MovieSpecification.titleContains(title));
         }
         if (genre != null && !genre.isBlank()) {
-            moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getGenre().toUpperCase().contains(genre.toUpperCase()))
-                    .toList();
+            if (spec != null) {
+                spec = spec.and(MovieSpecification.genreContains(genre));
+            }else {
+                spec = (MovieSpecification.genreContains(genre));
+            }
         }
         if(maxDuration != null) {
-            moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getDuration() < maxDuration)
-                    .toList();
-
+            if (spec != null) {
+                spec = spec.and(MovieSpecification.durationLessThanOrEqualTo(maxDuration));
+            }else {
+                spec = MovieSpecification.durationLessThanOrEqualTo(maxDuration);
+            }
         }
         if (minDuration != null) {
-            moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getDuration() > minDuration)
-                    .toList();
+            if (spec != null) {
+                spec = spec.and(MovieSpecification.durationGreaterThanOrEqualTo(minDuration));
+            }else {
+                spec = MovieSpecification.durationGreaterThanOrEqualTo(minDuration);
+            }
         }
         if (releaseYear != null) {
-            moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getReleaseYear() != null && filme.getReleaseYear().equals(releaseYear))
-                    .toList();
+            if (spec != null) {
+                spec = spec.and(MovieSpecification.yearEqualsTo(releaseYear));
+            }else {
+                spec = MovieSpecification.yearEqualsTo(releaseYear);
+            }
         }
         if (rating != null) {
-            moviesFiltro = moviesFiltro.stream()
-                    .filter(filme -> filme.getRating() != null && filme.getRating().equals(rating))
-                    .toList();
+            if (spec != null) {
+                spec = spec.and(MovieSpecification.ratingEqualsTo(rating));
+            }else {
+                spec = MovieSpecification.ratingEqualsTo(rating);
+            }
+        }
+
+        if (spec == null) {
+           moviesFiltro = movieRepository.findAll();
+        }else {
+            moviesFiltro = movieRepository.findAll(spec);
         }
         return moviesFiltro.stream()
                 .map(filme -> MovieMapper.toResponse(filme))
