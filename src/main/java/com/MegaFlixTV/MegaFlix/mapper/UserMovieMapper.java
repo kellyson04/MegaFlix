@@ -23,7 +23,7 @@ public class UserMovieMapper {
 
         return UserMovieResponse.builder()
                 .relationId(userMovie.getId())
-                .username(userMovie.getUser().getUser())
+                .username(userMovie.getUser().getUsername())
                 .movieid(userMovie.getMovie().getId())
                 .movieTitle(userMovie.getMovie().getMovie())
                 .movieGenre(userMovie.getMovie().getGenre())

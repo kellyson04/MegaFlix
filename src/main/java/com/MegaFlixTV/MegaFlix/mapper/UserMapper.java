@@ -12,14 +12,14 @@ public class UserMapper {
 
         return UserResponse.builder()
                 .id(user.getId())
-                .user(user.getUser())
+                .username(user.getUsername())
                 .build();
     }
 
     public static User mapToEntity (UserRequest userRequest) {
 
         return User.builder()
-                .user(userRequest.user())
+                .username(userRequest.username())
                 .password(userRequest.password())
                 .email(userRequest.email())
                 .build();

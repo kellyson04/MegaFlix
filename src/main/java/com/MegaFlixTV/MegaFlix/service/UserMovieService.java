@@ -119,7 +119,7 @@ public class UserMovieService {
 
         UserMovie relacao = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("Relação não existente."));
 
-        if (!userLoginRequest.user().equals(relacao.getUser().getUser())) {
+        if (!userLoginRequest.username().equals(relacao.getUser().getUsername())) {
             throw new RelationNotFoundException("Voce está tentando favoritar um filme que não é da sua Playlist.");
         }
 
@@ -136,7 +136,7 @@ public class UserMovieService {
 
         UserMovie userMovie = userMovieRepository.findById(relacaoId).orElseThrow(() -> new RelationNotFoundException("O usuario não possui esse Filme na Playlist!"));
 
-        if (!userLoginRequest.user().equals(userMovie.getUser().getUser())) {
+        if (!userLoginRequest.username().equals(userMovie.getUser().getUsername())) {
             throw new RelationNotFoundException("Voce está tentando desfavoritar um filme que não é da sua Playlist.");
         }
 
@@ -168,7 +168,7 @@ public class UserMovieService {
     }
 
     private void autenticarUsuario (UserLoginRequest userLoginRequest) {
-        User user = userRepository.findUserByUser(userLoginRequest.user()).orElseThrow(() -> new InvalidCredentialsException("Dados de login invalidos"));
+        User user = userRepository.findUserByUsername(userLoginRequest.username()).orElseThrow(() -> new InvalidCredentialsException("Dados de login invalidos"));
 
         if (!passwordEncoder.matches(userLoginRequest.password(),user.getPassword())) {
             throw new InvalidCredentialsException("Dados de Login invalidos");
