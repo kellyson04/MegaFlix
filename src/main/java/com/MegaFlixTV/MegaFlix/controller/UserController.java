@@ -1,17 +1,19 @@
 package com.MegaFlixTV.MegaFlix.controller;
 
 
-import com.MegaFlixTV.MegaFlix.controller.request.ChangePasswordRequest;
-import com.MegaFlixTV.MegaFlix.controller.request.ChangeUserDataRequest;
-import com.MegaFlixTV.MegaFlix.controller.request.UserLoginRequest;
-import com.MegaFlixTV.MegaFlix.controller.request.UserRequest;
+import com.MegaFlixTV.MegaFlix.controller.request.userRequests.ChangePasswordRequest;
+import com.MegaFlixTV.MegaFlix.controller.request.userRequests.ChangeUserDataRequest;
+import com.MegaFlixTV.MegaFlix.controller.request.userRequests.UserLoginRequest;
+import com.MegaFlixTV.MegaFlix.controller.request.userRequests.CreateUserRequest;
 import com.MegaFlixTV.MegaFlix.controller.response.UserLoginResponse;
 import com.MegaFlixTV.MegaFlix.controller.response.UserResponse;
 import com.MegaFlixTV.MegaFlix.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<UserResponse> criarUsuario (@RequestBody @Valid UserRequest userRequest) {
-         return ResponseEntity.status(HttpStatus.CREATED).body(userService.criarUsuario(userRequest));
+    public ResponseEntity<UserResponse> criarUsuario (@RequestBody @Valid CreateUserRequest createUserRequest) {
+         return ResponseEntity.status(HttpStatus.CREATED).body(userService.criarUsuario(createUserRequest));
     }
 
     @GetMapping()
@@ -42,13 +44,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> alterarUsuarioPorCompleto (@PathVariable Long id, @RequestBody @Valid UserRequest userRequest) {
-        return ResponseEntity.ok(userService.alterarUsuarioCompleto(id, userRequest));
+    public ResponseEntity<UserResponse> alterarUsuarioPorCompleto (@PathVariable Long id, @RequestBody @Valid CreateUserRequest createUserRequest) {
+        return ResponseEntity.ok(userService.alterarUsuarioCompleto(id, createUserRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> alterarUsuarioParcialmente (@PathVariable Long id,@RequestBody ChangeUserDataRequest changeUserDataRequest) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.alterarUsuarioParcialmente(id,changeUserDataRequest));
+    public ResponseEntity<Void> alterarUsuarioParcialmente (@PathVariable Long id, @RequestBody @Valid ChangeUserDataRequest changeUserDataRequest, Authentication authentication) {
+        userService.alterarUsuarioParcialmente(id, changeUserDataRequest,authentication);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
@@ -58,8 +61,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> login (@RequestBody @Valid UserLoginRequest userLoginRequest) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest));
+    public ResponseEntity<UserLoginResponse> login (@RequestBody @Valid UserLoginRequest userLoginRequest, HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logarUsuario(userLoginRequest, request, response));
     }
 
     @PutMapping("/{userId}/password")
