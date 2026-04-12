@@ -3,7 +3,9 @@ package com.MegaFlixTV.MegaFlix.config.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +21,7 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(HttpMethod.GET,"/megaflix/users/testeAuth").authenticated()
                                 .requestMatchers(HttpMethod.POST,"/megaflix/users").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/megaflix/users").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/megaflix/users/{id}").permitAll()
@@ -53,11 +56,16 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/megaflix/streamings/{streamingid}/movies").permitAll()
                                 .requestMatchers(HttpMethod.DELETE,"/megaflix/streamings/{streamingId}/movies/{movieId}").hasRole("ADMIN")
 
-                        ).httpBasic(Customizer.withDefaults());
+                        );
 
         return httpSecurity.build();
     }
 
+
+    @Bean
+    public AuthenticationManager authenticationManager (AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder () {
