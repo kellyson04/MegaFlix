@@ -1,4 +1,4 @@
-package com.MegaFlixTV.MegaFlix.controller.request;
+package com.MegaFlixTV.MegaFlix.controller.request.userRequests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
