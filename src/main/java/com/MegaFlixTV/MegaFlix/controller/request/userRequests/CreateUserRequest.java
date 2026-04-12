@@ -1,11 +1,10 @@
-package com.MegaFlixTV.MegaFlix.controller.request;
+package com.MegaFlixTV.MegaFlix.controller.request.userRequests;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record UserRequest(
+public record CreateUserRequest(
 
         @Size(min = 2, max = 50, message = "O nome deve ter no minimo 2 caracteres e no maximo 50")
         String username,
